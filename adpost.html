@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Select lat and long</title>
+<style type="text/css">
+html { height: 100% }
+body { height: 100%; margin: 0; padding: 0;font-family: Cambria, Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+	background:url(images/bg.jpg);
+	background-size: cover;
+	font-weight: 400;
+	font-size: 15px;
+	color: #1d3c41;
+	overflow-y: scroll; }
+form {
+    background-color: lightgrey;
+    width: 300px;
+    
+    border: 25px solid navy;
+   
+}
+#map_canvas { height: 100% }
+</style>
+<script type="text/javascript"
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6v5-2uaq_wusHDktM9ILcqIrlPtnZgEk">
+</script>
+<script type="text/javascript">
+
+    function initialize() {
+        var myLatlng = new google.maps.LatLng(13.080854549255324,80.26715206884147);
+        var myOptions = {
+            zoom:13,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+			
+        }
+        map = new google.maps.Map(document.getElementById("gmap"), myOptions);
+        // marker refers to a global variable
+        marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map
+        });
+
+		
+        // if center changed then update lat and lon document objects
+        google.maps.event.addListener(map, 'center_changed', function () {
+            var location = map.getCenter();
+            document.getElementById("lat").value = location.lat();
+
+            document.getElementById("lng").value = location.lng();
+            // call function to reposition marker location
+            placeMarker(location);
+        });
+        // if zoom changed, then update document object with new info
+        google.maps.event.addListener(map, 'zoom_changed', function () {
+            zoomLevel = map.getZoom();
+            document.getElementById("zoom_level").innerHTML = zoomLevel;
+        });
+        // double click on the marker changes zoom level
+        google.maps.event.addListener(marker, 'dblclick', function () {
+            zoomLevel = map.getZoom() + 1;
+            if (zoomLevel == 20) {
+                zoomLevel = 10;
+            }
+            document.getElementById("zoom_level").innerHTML = zoomLevel;
+            map.setZoom(zoomLevel);
+        });
+
+        function placeMarker(location) {
+            var clickedLocation = new google.maps.LatLng(location);
+            marker.setPosition(location);
+        }
+    }
+    window.onload = function () { initialize() };
+</script>
+     <style>
+ div#gmap {
+        width: 80%;
+        height: 500px;
+        border:double;
+ }
+ 
+
+    </style>
+    <script src="libs/backendless.js"></script>
+</head>
+
+<body>
+
+<center>
+<h1>Lets Advertise</h1>
+<h3>scroll the map to set latitude and longitude<h3>
+<!-- MAP HOLDER -->
+<div id="gmap"></div>
+</center>
+    
+	
+	
+<center>
+<form  action="#" autocomplete="on">
+	
+
+<!-- REFERENCES -->
+Ad:<input type="text" name="AD" required="required" id='ad'><br>
+lat:<input type="text" name="lat" required="required" id='lat'><br>
+lng:<input type="text" name="lon" required="required" id='lng'><br>
+category:<select name="category" id="category">
+  <option value="Electronics">Electronics</option>
+  <option value="Fashion">Fashion</option>
+  <option value="Entertainment">Entertainment</option>
+  <option value="Food">Food</option>
+  <option value="Government">Government</option>
+</select><br>
+<input type="button" value="Put AD" onclick="postad()">
+
+</form>
+
+</center>
+
+    1
+<script src="js/app.js"></script>
+</body>
+
+</html>
